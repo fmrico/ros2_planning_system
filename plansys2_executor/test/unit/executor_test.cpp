@@ -222,7 +222,7 @@ TEST(problem_expert, action_executor_client)
   test_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
   aux_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(test_node->get_node_base_interface());
   exe.add_node(aux_node->get_node_base_interface());
@@ -302,16 +302,16 @@ TEST(problem_expert, action_executor)
   auto domain_node = std::make_shared<plansys2::DomainExpertNode>();
   auto problem_node = std::make_shared<plansys2::ProblemExpertNode>();
   auto planner_node = std::make_shared<plansys2::PlannerNode>();
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_executor");
 
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/factory.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/factory.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -619,16 +619,16 @@ TEST(problem_expert, action_real_action_1)
   auto move_action_node = MoveAction::make_shared("move_action_performer", 100ms);
   move_action_node->set_parameter({"action_name", "move"});
 
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_executor");
 
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -872,16 +872,16 @@ TEST(problem_expert, cancel_bt_execution)
   auto move_action_node = MoveAction::make_shared("move_action_performer", 100ms);
   move_action_node->set_parameter({"action_name", "move"});
 
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_executor");
 
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -1072,17 +1072,17 @@ TEST(problem_expert, executor_client_execute_plan)
   auto move_action_node = MoveAction::make_shared("move_action_performer", 100ms);
   move_action_node->set_parameter({"action_name", "move"});
 
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node_1);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node_1);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node_2);
-  auto executor_client = std::make_shared<plansys2::ExecutorClient>(test_node_3);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto executor_client = std::make_shared<plansys2::ExecutorClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_executor");
 
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -1273,17 +1273,17 @@ TEST(problem_expert, executor_client_ordered_sub_goals)
   auto patrol_action_node = PatrolAction::make_shared("patrol_action_performer", 100ms);
   patrol_action_node->set_parameter({"action_name", "patrol"});
 
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node_1);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node_1);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node_2);
-  auto executor_client = std::make_shared<plansys2::ExecutorClient>(test_node_3);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto executor_client = std::make_shared<plansys2::ExecutorClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_executor");
 
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/domain_charging.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/domain_charging.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 9);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 9);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -1416,17 +1416,17 @@ TEST(problem_expert, executor_client_cancel_plan)
   auto move_action_node = MoveAction::make_shared("move_action_performer", 1s);
   move_action_node->set_parameter({"action_name", "move"});
 
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node_1);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node_1);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node_2);
-  auto executor_client = std::make_shared<plansys2::ExecutorClient>(test_node_3);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto executor_client = std::make_shared<plansys2::ExecutorClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_executor");
 
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/factory3.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -1551,10 +1551,10 @@ TEST(problem_expert, action_timeout)
   move_action_node->set_parameter({"action_name", "move"});
   move_action_node->set_runtime(10.0);
 
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node_1);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node_2);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node_3);
-  auto executor_client = std::make_shared<plansys2::ExecutorClient>(test_node_4);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto executor_client = std::make_shared<plansys2::ExecutorClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_executor");
 
@@ -1565,10 +1565,11 @@ TEST(problem_expert, action_timeout)
       pkgpath + "/test_behavior_trees/test_action_timeout_bt.xml"});
   executor_node->set_parameter({"action_timeouts.actions", std::vector<std::string>({"move"})});
   // have to declare because the actions vector above was not available at node creation
-  executor_node->declare_parameter("action_timeouts.move.duration_overrun_percentage");
+  executor_node->declare_parameter<double>(
+    "action_timeouts.move.duration_overrun_percentage", 1.0);
   executor_node->set_parameter({"action_timeouts.move.duration_overrun_percentage", 1.0});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());

@@ -38,10 +38,10 @@ TEST(test_2, test_2)
   auto planner_node = std::make_shared<plansys2::PlannerNode>();
   auto executor_node = std::make_shared<plansys2::ExecutorNode>();
 
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
-  auto executor_client = std::make_shared<plansys2::ExecutorClient>(test_node);
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto executor_client = std::make_shared<plansys2::ExecutorClient>();
 
   auto move_action_node = plansys2_tests::TestAction::make_shared("move");
   auto ask_charge_node = plansys2_tests::TestAction::make_shared("askcharge");
@@ -54,7 +54,7 @@ TEST(test_2, test_2)
   domain_node->set_parameter({"model_file", pkgpath + "/test_2/pddl/test_2.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/test_2/pddl/test_2.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());

@@ -152,6 +152,7 @@ char ** completer(const char * text, int start, int end)
 
   return rl_completion_matches(text, completion_generator);
 }
+// LCOV_EXCL_STOP
 
 
 Terminal::Terminal()
@@ -163,11 +164,10 @@ Terminal::Terminal()
 void
 Terminal::init()
 {
-  std::shared_ptr<rclcpp::Node> terminal_node = shared_from_this();
-  domain_client_ = std::make_shared<plansys2::DomainExpertClient>(terminal_node);
-  problem_client_ = std::make_shared<plansys2::ProblemExpertClient>(terminal_node);
-  planner_client_ = std::make_shared<plansys2::PlannerClient>(terminal_node);
-  executor_client_ = std::make_shared<plansys2::ExecutorClient>(terminal_node);
+  domain_client_ = std::make_shared<plansys2::DomainExpertClient>();
+  problem_client_ = std::make_shared<plansys2::ProblemExpertClient>();
+  planner_client_ = std::make_shared<plansys2::PlannerClient>();
+  executor_client_ = std::make_shared<plansys2::ExecutorClient>();
 
   add_problem();
 }
@@ -191,6 +191,7 @@ void Terminal::add_problem()
   }
 }
 
+// LCOV_EXCL_START
 void
 Terminal::run_console()
 {

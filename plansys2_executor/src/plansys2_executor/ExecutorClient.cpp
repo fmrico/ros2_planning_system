@@ -28,9 +28,10 @@ using namespace std::placeholders;
 
 using ExecutePlan = plansys2_msgs::action::ExecutePlan;
 
-ExecutorClient::ExecutorClient(rclcpp::Node::SharedPtr provided_node)
-: node_(provided_node)
+ExecutorClient::ExecutorClient()
 {
+  node_ = rclcpp::Node::make_shared("executor_client");
+
   createActionClient();
 
   get_ordered_sub_goals_client_ = node_->create_client<plansys2_msgs::srv::GetOrderedSubGoals>(
@@ -190,7 +191,7 @@ std::vector<plansys2_msgs::msg::Tree> ExecutorClient::getOrderedSubGoals()
   auto future_result = get_ordered_sub_goals_client_->async_send_request(request);
 
   if (rclcpp::spin_until_future_complete(node_, future_result, std::chrono::seconds(1)) !=
-    rclcpp::executor::FutureReturnCode::SUCCESS)
+    rclcpp::FutureReturnCode::SUCCESS)
   {
     return ret;
   }
@@ -224,7 +225,7 @@ std::optional<plansys2_msgs::msg::Plan> ExecutorClient::getPlan()
   auto future_result = get_plan_client_->async_send_request(request);
 
   if (rclcpp::spin_until_future_complete(node_, future_result, std::chrono::seconds(1)) !=
-    rclcpp::executor::FutureReturnCode::SUCCESS)
+    rclcpp::FutureReturnCode::SUCCESS)
   {
     return {};
   }

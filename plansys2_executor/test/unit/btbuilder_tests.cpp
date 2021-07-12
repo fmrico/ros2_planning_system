@@ -134,9 +134,9 @@ TEST(btbuilder_tests, test_plan_1)
   auto problem_node = std::make_shared<plansys2::ProblemExpertNode>();
   auto planner_node = std::make_shared<plansys2::PlannerNode>();
 
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
 
   auto btbuilder = std::make_shared<BTBuilderTest>(test_node);
 
@@ -145,7 +145,7 @@ TEST(btbuilder_tests, test_plan_1)
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/domain_simple_2.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/domain_simple_2.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -373,9 +373,9 @@ TEST(btbuilder_tests, test_plan_2)
   auto problem_node = std::make_shared<plansys2::ProblemExpertNode>();
   auto planner_node = std::make_shared<plansys2::PlannerNode>();
 
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
 
   auto btbuilder = std::make_shared<BTBuilderTest>(test_node);
 
@@ -384,7 +384,7 @@ TEST(btbuilder_tests, test_plan_2)
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/factory.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/factory.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -589,9 +589,9 @@ TEST(btbuilder_tests, test_plan_3)
   auto problem_node = std::make_shared<plansys2::ProblemExpertNode>();
   auto planner_node = std::make_shared<plansys2::PlannerNode>();
 
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
 
   auto btbuilder = std::make_shared<BTBuilderTest>(test_node);
 
@@ -600,7 +600,7 @@ TEST(btbuilder_tests, test_plan_3)
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/domain_simple_2.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/domain_simple_2.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -680,9 +680,9 @@ TEST(btbuilder_tests, test_plan_4)
   auto problem_node = std::make_shared<plansys2::ProblemExpertNode>();
   auto planner_node = std::make_shared<plansys2::PlannerNode>();
 
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
-  auto planner_client = std::make_shared<plansys2::PlannerClient>(test_node);
-  auto domain_client = std::make_shared<plansys2::DomainExpertClient>(test_node);
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
+  auto planner_client = std::make_shared<plansys2::PlannerClient>();
+  auto domain_client = std::make_shared<plansys2::DomainExpertClient>();
 
   auto btbuilder = std::make_shared<BTBuilderTest>(test_node);
 
@@ -691,7 +691,7 @@ TEST(btbuilder_tests, test_plan_4)
   domain_node->set_parameter({"model_file", pkgpath + "/pddl/cooking_domain.pddl"});
   problem_node->set_parameter({"model_file", pkgpath + "/pddl/cooking_domain.pddl"});
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());

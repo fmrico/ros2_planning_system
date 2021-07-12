@@ -39,7 +39,7 @@ TEST(problem_expert_node, addget_instances)
   auto test_node_2 = rclcpp::Node::make_shared("test_problem_expert_node_2");
   auto domain_node = std::make_shared<plansys2::DomainExpertNode>();
   auto problem_node = std::make_shared<plansys2::ProblemExpertNode>();
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_problem_expert");
 
@@ -53,7 +53,7 @@ TEST(problem_expert_node, addget_instances)
   domain_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
   problem_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());
@@ -579,7 +579,7 @@ TEST(problem_expert_node, addget_goal_is_satisfied)
   auto test_node_2 = rclcpp::Node::make_shared("test_problem_expert_node_2");
   auto domain_node = std::make_shared<plansys2::DomainExpertNode>();
   auto problem_node = std::make_shared<plansys2::ProblemExpertNode>();
-  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>(test_node);
+  auto problem_client = std::make_shared<plansys2::ProblemExpertClient>();
 
   std::string pkgpath = ament_index_cpp::get_package_share_directory("plansys2_problem_expert");
 
@@ -593,7 +593,7 @@ TEST(problem_expert_node, addget_goal_is_satisfied)
   domain_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
   problem_node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
 
-  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::executor::ExecutorArgs(), 8);
+  rclcpp::executors::MultiThreadedExecutor exe(rclcpp::ExecutorOptions(), 8);
 
   exe.add_node(domain_node->get_node_base_interface());
   exe.add_node(problem_node->get_node_base_interface());

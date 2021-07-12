@@ -49,8 +49,8 @@ public:
 		}
 	}
 
-  std::string getDomainName( const std::string &s) {
-    std::string domain_name = "";
+	std::string getDomainName( const std::string &s) {
+		std::string domain_name = "";
 
 		Stringreader f( s );
 		f.parseName( "problem" );
@@ -65,7 +65,7 @@ public:
 				break;
 			}
 		}
-    return domain_name;
+		return domain_name;
 	}
 
 	void parseDomain( Stringreader & f ) {
