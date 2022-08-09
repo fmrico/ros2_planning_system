@@ -25,7 +25,6 @@
 
 #include "plansys2_executor/ExecutorNode.hpp"
 #include "plansys2_executor/ActionExecutor.hpp"
-#include "plansys2_executor/BTBuilder.hpp"
 #include "plansys2_problem_expert/Utils.hpp"
 #include "plansys2_pddl_parser/Utils.h"
 
@@ -60,11 +59,13 @@ using ExecutePlan = plansys2_msgs::action::ExecutePlan;
 using namespace std::chrono_literals;
 
 ExecutorNode::ExecutorNode()
-: rclcpp_lifecycle::LifecycleNode("executor")
+: rclcpp_lifecycle::LifecycleNode("executor"),
+  bt_builder_loader_("plansys2_executor", "plansys2::BTBuilder")
 {
   using namespace std::placeholders;
 
   this->declare_parameter<std::string>("default_action_bt_xml_filename", "");
+  this->declare_parameter<std::string>("default_bt_builder_plugin", "");
   this->declare_parameter<bool>("enable_dotgraph_legend", true);
   this->declare_parameter<bool>("print_graph", false);
   this->declare_parameter("action_timeouts.actions", std::vector<std::string>{});
@@ -140,7 +141,6 @@ ExecutorNode::on_configure(const rclcpp_lifecycle::State & state)
   executing_plan_pub_ = create_publisher<plansys2_msgs::msg::Plan>(
     "executing_plan", rclcpp::QoS(100).transient_local());
 
-  aux_node_ = std::make_shared<rclcpp::Node>("executor_helper");
   domain_client_ = std::make_shared<plansys2::DomainExpertClient>();
   problem_client_ = std::make_shared<plansys2::ProblemExpertClient>();
   planner_client_ = std::make_shared<plansys2::PlannerClient>();
@@ -355,7 +355,19 @@ ExecutorNode::execute(const std::shared_ptr<GoalHandleExecutePlan> goal_handle)
   }
   ordered_sub_goals_ = getOrderedSubGoals();
 
-  BTBuilder bt_builder(aux_node_, action_bt_xml_);
+  auto default_bt_builder_plugin = this->get_parameter("default_bt_builder_plugin").as_string();
+  if (default_bt_builder_plugin.empty()) {
+    default_bt_builder_plugin = "SimpleBTBuilder";
+  }
+
+  std::shared_ptr<plansys2::BTBuilder> bt_builder;
+  try {
+    bt_builder = bt_builder_loader_.createSharedInstance("plansys2::" + default_bt_builder_plugin);
+  } catch (pluginlib::PluginlibException& ex) {
+    RCLCPP_ERROR(get_logger(), "pluginlib error: %s", ex.what());
+  }
+
+  bt_builder->initialize(action_bt_xml_);
   auto blackboard = BT::Blackboard::create();
 
   blackboard->set("action_map", action_map);
@@ -373,13 +385,11 @@ ExecutorNode::execute(const std::shared_ptr<GoalHandleExecutePlan> goal_handle)
   factory.registerNodeType<ApplyAtEndEffect>("ApplyAtEndEffect");
   factory.registerNodeType<CheckTimeout>("CheckTimeout");
 
-  auto bt_xml_tree = bt_builder.get_tree(current_plan_.value());
-  auto action_graph = bt_builder.get_graph(current_plan_.value());
+  auto bt_xml_tree = bt_builder->get_tree(current_plan_.value());
   std_msgs::msg::String dotgraph_msg;
-  dotgraph_msg.data =
-    bt_builder.get_dotgraph(
-    action_graph, action_map, this->get_parameter(
-      "enable_dotgraph_legend").as_bool(), this->get_parameter("print_graph").as_bool());
+  dotgraph_msg.data = bt_builder->get_dotgraph(
+    action_map, this->get_parameter("enable_dotgraph_legend").as_bool(),
+    this->get_parameter("print_graph").as_bool());
   dotgraph_pub_->publish(dotgraph_msg);
 
   std::filesystem::path tp = std::filesystem::temp_directory_path();
@@ -434,10 +444,8 @@ ExecutorNode::execute(const std::shared_ptr<GoalHandleExecutePlan> goal_handle)
     feedback->action_execution_status = get_feedback_info(action_map);
     goal_handle->publish_feedback(feedback);
 
-    dotgraph_msg.data =
-      bt_builder.get_dotgraph(
-      action_graph, action_map, this->get_parameter(
-        "enable_dotgraph_legend").as_bool());
+    dotgraph_msg.data = bt_builder->get_dotgraph(
+      action_map, this->get_parameter("enable_dotgraph_legend").as_bool());
     dotgraph_pub_->publish(dotgraph_msg);
 
     rate.sleep();
@@ -452,10 +460,8 @@ ExecutorNode::execute(const std::shared_ptr<GoalHandleExecutePlan> goal_handle)
     RCLCPP_ERROR(get_logger(), "Executor BT finished with FAILURE state");
   }
 
-  dotgraph_msg.data =
-    bt_builder.get_dotgraph(
-    action_graph, action_map, this->get_parameter(
-      "enable_dotgraph_legend").as_bool());
+  dotgraph_msg.data = bt_builder->get_dotgraph(
+    action_map, this->get_parameter("enable_dotgraph_legend").as_bool());
   dotgraph_pub_->publish(dotgraph_msg);
 
   result->success = status == BT::NodeStatus::SUCCESS;
