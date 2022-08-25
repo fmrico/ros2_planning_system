@@ -22,7 +22,7 @@
 #include <map>
 #include <utility>
 
-#include "plansys2_bt_builder_plugins/simple_bt_builder.hpp"
+#include "plansys2_executor/simple_bt_builder.hpp"
 
 #include "plansys2_domain_expert/DomainExpertClient.hpp"
 #include "plansys2_problem_expert/ProblemExpertClient.hpp"

@@ -81,10 +81,18 @@ install(DIRECTORY include/
   DESTINATION include/
 )
 
+add_library(simple_bt_builder SHARED
+  src/plansys2_executor/simple_bt_builder.cpp
+)
+ament_target_dependencies(simple_bt_builder ${dependencies})
+
+pluginlib_export_plugin_description_file(plansys2_executor plugins.xml)
+
 install(DIRECTORY launch behavior_trees DESTINATION share/${PROJECT_NAME})
 
 install(TARGETS
   ${PROJECT_NAME}
+  simple_bt_builder
   executor_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -101,7 +109,7 @@ if(BUILD_TESTING)
 endif()
 
 ament_export_include_directories(include)
-ament_export_libraries(${PROJECT_NAME})
+ament_export_libraries(${PROJECT_NAME} simple_bt_builder)
 ament_export_dependencies(${dependencies})
 
 ament_package()
